@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enhanced>
+    <class class_name="com.example.skywalking.demo.SkywalkingDemoApplication.CustomizeEnhanceController">
+        <method method="doSkyPlugins(java.lang.String,java.lang.String,int.class)" static="false">
+            <tag key="name">arg[0]</tag>
+            <tag key="address">arg[1]</tag>
+        </method>
+    </class>
+</enhanced>
