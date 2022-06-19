@@ -24,7 +24,7 @@ https://www.cnblogs.com/ssgeek/p/14586397.html
 监控告警，metric/tracing确定问题存在故障（根据metric做告警，根据tracing统计作比较）  
 确定故障在哪，tracing调用关系，确定故障出现在哪个service或者endpoint  
 profile手段（skywalking新能力）或者常见传统性能定位方法，定位单节点问题所在（比如CPU、内存、io、网络 ——> 动态追踪采样 ——> 火焰图）基本可以解决99.9%的问题  
-
+SkyWalking - 实现微服务监控告警 https://www.jianshu.com/p/5cc42569af6f/ （邮件告警实现）
 
 6. 将http调用请求和响应信息作为Tag信息上报SW  
 com.example.skywalking.demo.filter.ApmHttpInvokeFilter  
