@@ -50,7 +50,7 @@ com.example.skywalking.demo.SkywalkingDemoApplication.ProfileController
 2. 一个时刻只允许一个task ，否则在点击创建任务时候，会提示：current service already has monitor task execute at this time  
 
 
-9. log  (测试中)
+9. log 功能 
 
 在apm-toolkit-logback-1.x的版本8.4.0之后才有org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender类，才能通过Java Agent的方式将日志信息上报到Skywalking系统上
 参考：https://github.com/apache/skywalking-java/tree/v8.4.0/apm-application-toolkit/apm-toolkit-logback-1.x/src/main/java/org/apache/skywalking/apm/toolkit/log/logback/v1/x/log  
@@ -68,6 +68,13 @@ com.example.skywalking.demo.SkywalkingDemoApplication.ProfileController
     <version>8.9.0</version>
 </dependency>
 ```
+
+测试成功版本： skywalking 8.9.1 、apm-toolkit-trace 8.9.0、apm-toolkit-logback-1.x 8.9.0  
+总结：  
+用skywalking 统一管理log ，结合trace功能，实现一个平台来管理 log 和 trace；  
+
+
+
 
 
 
