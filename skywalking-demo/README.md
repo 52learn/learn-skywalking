@@ -32,51 +32,54 @@ com.example.skywalking.demo.filter.ApmHttpInvokeFilter
 
 7. 客户化非侵入式增强实现追踪 （未实现）  
 com.example.skywalking.demo.SkywalkingDemoApplication.CustomizeEnhanceController  
-
 agent目录下的agent.config文件添加配置：  
 路径：D:\program\middleware\apache-skywalking-apm-es7-8.2.0\apache-skywalking-apm-bin-es7\agent\config\agent.config
-plugin.customize.enhance_file=/f/learn/learn-skywalking/skywalking-demo/src/main/resources/customize_enhance.xml
-
-参考：
+plugin.customize.enhance_file=/f/learn/learn-skywalking/skywalking-demo/src/main/resources/customize_enhance.xml  
+参考：  
 https://skywalking.apache.org/docs/skywalking-java/latest/en/setup/service-agent/java-agent/customize-enhance-trace/  
 https://string.quest/read/6527310  
 https://skyapm.github.io/document-cn-translation-of-skywalking/zh/6.2.0/setup/service-agent/java-agent/Customize-enhance-trace.html  
 
-
-8. skywalking profile线程方法栈分析
+8. skywalking profile线程方法栈分析  
 com.example.skywalking.demo.SkywalkingDemoApplication.ProfileController   
 注意：  
-1. /profile/{seconds} 这种endpoint无法profile  
-2. 一个时刻只允许一个task ，否则在点击创建任务时候，会提示：current service already has monitor task execute at this time  
+    1. /profile/{seconds} 这种endpoint无法profile  
+    2. 一个时刻只允许一个task ，否则在点击创建任务时候，会提示：current service already has monitor task execute at this time    
 
+9. log 功能 (采用logback+gRpc上报方式)  
+    在apm-toolkit-logback-1.x的版本8.4.0之后才有org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender类，才能通过集成logback以gRpc方式将日志信息上报到Skywalking系统上
+    参考：  
+        1. https://github.com/apache/skywalking-java/tree/v8.4.0/apm-application-toolkit/apm-toolkit-logback-1.x/src/main/java/org/apache/skywalking/apm/toolkit/log/logback/v1/x/log   
+        2. https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/log-analyzer/  
+    推荐skywalking 使用8.4.0及以上，这里采用skywalking 8.9.1版本 ，及：
+    ```
+    <dependency>
+        <groupId>org.apache.skywalking</groupId>
+        <artifactId>apm-toolkit-trace</artifactId>
+        <version>8.9.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.skywalking</groupId>
+        <artifactId>apm-toolkit-logback-1.x</artifactId>
+        <version>8.9.0</version>
+    </dependency>
+    ```
+    logback 配置：
+    ```
+    <appender name="grpc-log" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{tid}] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+            </layout>
+        </encoder>
+    </appender>
+    ```
+    测试成功版本： skywalking 8.9.1 、apm-toolkit-trace 8.9.0、apm-toolkit-logback-1.x 8.9.0  
+    总结：  
+    用skywalking 统一管理log ，结合trace功能，实现一个平台来管理 log 和 trace  
 
-9. log 功能 
-
-在apm-toolkit-logback-1.x的版本8.4.0之后才有org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender类，才能通过Java Agent的方式将日志信息上报到Skywalking系统上
-参考：https://github.com/apache/skywalking-java/tree/v8.4.0/apm-application-toolkit/apm-toolkit-logback-1.x/src/main/java/org/apache/skywalking/apm/toolkit/log/logback/v1/x/log  
-
-推荐skywalking 使用8.4.0及以上，这里采用skywalking 8.9.1版本 ，及：
-```
-<dependency>
-    <groupId>org.apache.skywalking</groupId>
-    <artifactId>apm-toolkit-trace</artifactId>
-    <version>8.9.0</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.skywalking</groupId>
-    <artifactId>apm-toolkit-logback-1.x</artifactId>
-    <version>8.9.0</version>
-</dependency>
-```
-
-测试成功版本： skywalking 8.9.1 、apm-toolkit-trace 8.9.0、apm-toolkit-logback-1.x 8.9.0  
-总结：  
-用skywalking 统一管理log ，结合trace功能，实现一个平台来管理 log 和 trace；  
-
-
-
-
-
+10. skywalking的稳定性对业务系统的影响测试  
+测试描述：将启动参数：SW_AGENT_COLLECTOR_BACKEND_SERVICES=192.168.33.10:91800 修改为其他端口，启动demo应用正常；测试http接口正常，只是没有skywalking的功能而已，比如：traceID没有，但接口功能正常，控制台输出日志也是有的；  
 
 
 ## 部署演示
