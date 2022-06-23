@@ -23,6 +23,11 @@ import org.springframework.web.client.RestTemplate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 /**
  * VM options:-javaagent:D:\program\middleware\apache-skywalking-apm-es7-8.2.0\apache-skywalking-apm-bin-es7\agent\skywalking-agent.jar
  *
@@ -233,5 +238,66 @@ public class SkywalkingDemoApplication {
 
     }
 
+    /**
+     * SW的Profile功能测试
+     */
+    @RestController
+    class ProfileController{
 
+        @GetMapping(value="/profile/{seconds}")
+        public String slowDealSeconds(@PathVariable(name = "seconds") Integer seconds){
+            sleep(seconds);
+            process();
+            return "sleepSomeTime (s)："+seconds;
+        }
+        @GetMapping(value="/profile/slow")
+        public String slow(){
+            sleep(1);
+            process();
+            return "slow";
+        }
+        @Trace(operationName = "threadSleep")
+        private void sleep(Integer seconds){
+            try {
+                Thread.sleep(seconds*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Trace(operationName = "service/processWithThreadPool")
+        private void process() {
+            final ExecutorService threadPool = Executors.newFixedThreadPool(2);
+            final CountDownLatch countDownLatch = new CountDownLatch(2);
+            threadPool.submit(new Task1(countDownLatch));
+            threadPool.submit(new Task2(countDownLatch));
+            try {
+                countDownLatch.await(2000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        class Task1 implements Runnable {
+            private final CountDownLatch countDownLatch;
+            public Task1(CountDownLatch countDownLatch) {
+                this.countDownLatch = countDownLatch;
+            }
+            @Override
+            public void run() {
+                countDownLatch.countDown();
+            }
+        }
+
+        class Task2 implements Runnable {
+            private final CountDownLatch countDownLatch;
+            public Task2(CountDownLatch countDownLatch) {
+                this.countDownLatch = countDownLatch;
+            }
+            @Override
+            public void run() {
+                //            countDownLatch.countDown();
+            }
+        }
+    }
 }

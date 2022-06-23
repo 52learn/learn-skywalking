@@ -42,6 +42,16 @@ https://skywalking.apache.org/docs/skywalking-java/latest/en/setup/service-agent
 https://string.quest/read/6527310  
 https://skyapm.github.io/document-cn-translation-of-skywalking/zh/6.2.0/setup/service-agent/java-agent/Customize-enhance-trace.html  
 
+
+8. skywalking profile线程方法栈分析
+com.example.skywalking.demo.SkywalkingDemoApplication.ProfileController   
+注意：  
+1. /profile/{seconds} 这种endpoint无法profile  
+2. 一个时刻只允许一个task ，否则在点击创建任务时候，会提示：current service already has monitor task execute at this time  
+
+
+
+
 ## 部署演示
 
 
