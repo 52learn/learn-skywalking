@@ -250,8 +250,8 @@ public class SkywalkingDemoApplication {
             process();
             return "sleepSomeTime (s)："+seconds;
         }
-        @GetMapping(value="/profile/slow")
-        public String slow(){
+        @GetMapping(value="/slowProfile")
+        public String slowProfile(){
             sleep(1);
             process();
             return "slow";
