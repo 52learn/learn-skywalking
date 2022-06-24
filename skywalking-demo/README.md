@@ -44,7 +44,8 @@ https://skyapm.github.io/document-cn-translation-of-skywalking/zh/6.2.0/setup/se
 com.example.skywalking.demo.SkywalkingDemoApplication.ProfileController   
 注意：  
     1. /profile/{seconds} 这种endpoint无法profile  
-    2. 一个时刻只允许一个task ，否则在点击创建任务时候，会提示：current service already has monitor task execute at this time    
+    2. 一个时刻只允许一个task ，否则在点击创建任务时候，会提示：current service already has monitor task execute at this time  
+    3. 创建task时，填写Endpoint Name，需加上Http Method，如：GET:/slowProfile  
 
 9. log 功能 (采用logback+gRpc上报方式)  
     在apm-toolkit-logback-1.x的版本8.4.0之后才有org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender类，才能通过集成logback以gRpc方式将日志信息上报到Skywalking系统上
@@ -81,19 +82,29 @@ com.example.skywalking.demo.SkywalkingDemoApplication.ProfileController
 10. skywalking的稳定性对业务系统的影响测试  
 测试描述：将启动参数：SW_AGENT_COLLECTOR_BACKEND_SERVICES=192.168.33.10:91800 修改为其他端口，启动demo应用正常；测试http接口正常，只是没有skywalking的功能而已，比如：traceID没有，但接口功能正常，控制台输出日志也是有的；  
 
+11. Dynamic Configurations at Agent Side  
+begin from v8.4.0  
+
+
 
 ## 部署演示
 
 
-
-
 # 延伸阅读
+## Compatibility: Skywalking Agent with Skywalking OAP Server 
+https://skywalking.apache.org/docs/main/latest/en/setup/service-agent/agent-compatibility/
+
+## Apache SkyWalking 8.4: Logs, VM Monitoring, and Dynamic Configurations at Agent Side
+https://www.tetrate.io/blog/skywalking-8-4/ 
+
 ## Logback Extensions
 https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/reference/html/boot-features-logging.html#boot-features-logback-extensions
 
 ## Spring参数错误时输出Http内容
 https://www.jianshu.com/p/63dafc907765
 
+## 性能分析工具SkyWalking插件开发指南  
+https://insights.thoughtworks.cn/skywalking-plugin-guide/
 
 ## Issues
 1. Skywalking 8.9.1 (docker-compose.yml) create task for profiling : Exception while fetching data (/getProfileTaskList) : Can't split service id into 2 parts  
